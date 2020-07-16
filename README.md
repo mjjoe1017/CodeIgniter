@@ -107,6 +107,7 @@ $route['(:any)'] = 'pages/view/$1';
 開啟瀏覽器輸入URL:`http://localhost/codeigniter/index.php/about`
 
 
+
 ## 新增動態模組
 
 ### 設定 Model (模型) 
@@ -135,7 +136,7 @@ code:
 ```
 
 ### 新增資料庫
-> `啟動 MySQL database server`
+#### 開啟XAMPP 啟動 MySQL database server
 `路徑 http://localhost/phpmyadmin/server_sql.php`
 
 > 點選 SQL 新增資料庫
@@ -171,7 +172,7 @@ code:
 ```php
 <?php
     class news extends CI_Controller {
-        
+
         public function __construct() {
             parent::__construct();
             $this->load->model('news_model');
