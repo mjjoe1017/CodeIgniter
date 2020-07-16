@@ -422,4 +422,4 @@ $route['(:any)'] = 'pages/view/$1';
 $route['default_controller'] = 'pages/view';
 ```
 
-開啟瀏覽器輸入URL:`http://localhost/codeigniter/index.php/about`
+開啟瀏覽器輸入URL:`http://localhost/codeigniter/index.php/news/create`
