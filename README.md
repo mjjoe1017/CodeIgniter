@@ -12,9 +12,9 @@
 
 # CodeIgniter 教學
 
-1. 新增靜態頁面
+## 新增靜態頁面
 
-新增 pages.php 檔案
+### 新增 pages.php 檔案
 
 `路徑 application/controllers/pages.php`
 
@@ -36,7 +36,7 @@ code:
 ```
 
 
-新增 header.php 檔案
+### 新增 header.php 檔案
 
 `路徑 application/views/templates/header.php`
 
@@ -54,7 +54,7 @@ code:
 ```
 
 
-新增 footer.php 檔案
+### 新增 footer.php 檔案
 
 `路徑 application/views/templates/footer.php` 
 
@@ -65,7 +65,7 @@ code:
 </html>
 ```
 
-新增 home.php 檔案
+### 新增 home.php 檔案
 
 `路徑 application/views/pages/home.php` 
 
@@ -74,7 +74,7 @@ code:
 <?php echo "This is home page"; ?><br />
 ```
 
-新增 about.php 檔案
+### 新增 about.php 檔案
 
 `路徑 application/views/pages/about.php` 
 
