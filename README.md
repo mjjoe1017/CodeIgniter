@@ -86,7 +86,22 @@ code:
 ```
 
 
-開啟瀏覽器輸入URL:http://localhost/codeigniter/index.php/pages/view
+開啟瀏覽器輸入URL:`http://localhost/codeigniter/index.php/pages/view`
+
+自訂的路由規則 `http://example.com/[controller-class]/[controller-method]/[arguments]`
 
 
+### 修改路由
+`路徑 application/config/routes.php`
 
+code:
+
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+$route['default_controller'] = 'pages/view';
+$route['(:any)'] = 'pages/view/$1';
+```
+
+開啟瀏覽器輸入URL:`http://localhost/codeigniter/index.php/about`
