@@ -19,39 +19,39 @@
 `路徑 application/controllers/pages.php`
 
 code:
+```php
+  class pages extends CI_Controller {
+    public function view($page = 'home') {
+           if (!file_exists(APPPATH.'views/pages/'.$pages.'.php')) {
+               //Whoops, we don't have a page for that !
+               show_404();`
+           }`
+           $data['title'] = ucfirst($pages);  //Capitalize the first letter
 
-> <?php 
->   class pages extends CI_Controller {
->       public function view($page = 'home') {
->           if (!file_exists(APPPATH.'views/pages/'.$pages.'.php')) {
->               //Whoops, we don't have a page for that !
->               show_404();
->           }
->           $data['title'] = ucfirst($pages); // Capitalize the first letter
->
->           $this->load->view('templates/header', $data);
->           $this->load->view('pages/'.$page, $data);
->           $this->load->view('templates/footer', $data);
->       }
->   }   
-> `>
+           $this->load->view('templates/header', $data);
+           $this->load->view('pages/'.$page, $data);
+           $this->load->view('templates/footer', $data);
+       }
+   } 
+```
 
 
 新增 header.php 檔案
 
-`路徑 application/views/templates/header.php` 
+`路徑 application/views/templates/header.php`
 
 code:
-><!DOCTYPE html>
-> <html lang="en">
->   <head>
->       <meta charset="UTF-8">
->       <meta name="viewport" content="width=device-width, initial-scale=1.0">
->       <title>CodeIgniter Tutorial</title>
->   </head>
->   <body>
->       <h1><?php echo $title; ?></h1>
-> 
+```php
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CodeIgniter Tutorial</title>
+    </head>
+    <body>
+        <h1><?php echo $title; ?></h1>
+```
 
 
 新增 footer.php 檔案
@@ -59,25 +59,29 @@ code:
 `路徑 application/views/templates/footer.php` 
 
 code:
->       <em>&copy; 2020 | All Rights Reserved. Designed by Sky</em>
->   </body>
-> </html>
-
+```php
+        <em>&copy; 2020 | All Rights Reserved. Designed by Sky</em>
+    </body>
+</html>
+```
 
 新增 home.php 檔案
 
 `路徑 application/views/pages/home.php` 
 
 code:
-> <?php echo "This is home page"; ?><br />
-
+```php
+<?php echo "This is home page"; ?><br />
+```
 
 新增 about.php 檔案
 
 `路徑 application/views/pages/about.php` 
 
 code:
-> <?php echo "This is about page"; ?><br />
+```php
+<?php echo "This is about page"; ?><br />
+```
 
 
 開啟瀏覽器輸入URL:http://localhost/codeigniter/index.php/pages/view
