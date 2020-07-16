@@ -20,7 +20,7 @@
 
 code:
 ```php
-<?php>
+<?php
   class pages extends CI_Controller {
     public function view($page = 'home') {
            if (!file_exists(APPPATH.'views/pages/'.$pages.'.php')) {
@@ -34,7 +34,7 @@ code:
            $this->load->view('templates/footer', $data);
        }
    }
-<?>
+?>
 ```
 
 
