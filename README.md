@@ -105,3 +105,164 @@ $route['(:any)'] = 'pages/view/$1';
 ```
 
 開啟瀏覽器輸入URL:`http://localhost/codeigniter/index.php/about`
+
+
+## 新增動態模組
+
+### 設定 Model (模型) 
+`路徑 application/models/News_model.php`
+
+code:
+
+```php
+<?php
+    class news_model extends CI_Model {
+        public function __construct() {
+            $this->load->database();
+        }
+
+        public function get_news($slug = FALSE) {
+            if ($slug === FALSE) {
+                $query = $this->db->get('news');
+                return $query->result_array();
+            }
+
+            $query = $this->db->get_where('news', array('slug' => $slug));
+            return $query->row_array();
+        }
+    }
+?>
+```
+
+### 新增資料庫
+> `啟動 MySQL database server`
+`路徑 http://localhost/phpmyadmin/server_sql.php`
+
+> 點選 SQL 新增資料庫
+```sql
+    CREATE database CI_news
+```
+
+> 點選 SQL 新增資料欄位
+```SQL
+    CREATE TABLE news (
+        id int(11) NOT NULL AUTO_INCREMENT,
+        title varchar(128) NOT NULL,
+        slug varchar(128) NOT NULL,
+        text text NOT NULL,
+        PRIMARY KEY (id),
+        KEY slug (slug)
+    );
+```
+
+> 點選 SQL 加入2筆資料
+``` SQL
+    INSERT INTO `CI_news`.`news` (`id`, `title`, `slug`, `text`) VALUES (NULL, 'Write Like You Talk', 'false', 'Here\'s a simple trick for getting more people to read what you write: write in spoken language. Something comes over most people when they start writing. They write in a different language than they\'d use if they were talking to a friend. The sentence structure and even the words are different. No one uses "pen" as a verb in spoken English. You\'d feel like an idiot using "pen" instead of "write" in a conversation with a friend.');
+    INSERT INTO `CI_news`.`news` (`id`, `title`, `slug`, `text`) VALUES (NULL, 'A decade at google', 'true', 'One of the key challenges you face in an industrial research lab is how to choose your projects. You want your projects to be interesting research but also contribute to your company. As a junior researcher, you’re typically in the situation of choosing a project to join, while later in your career you are expected to come up with and lead your own projects. Regardless of your age, you have to make an educated decision.');
+```
+
+### 顯示資料庫資料
+
+#### 取回資料
+`路徑 application/controllers/news.php`
+
+code:
+
+```php
+<?php
+    class news extends CI_Controller {
+        
+        public function __construct() {
+            parent::__construct();
+            $this->load->model('news_model');
+        }
+
+        public function index() {
+            $data['news'] = $this->news_model->get_news();
+            $data['title'] = 'News archive';
+
+            $this->load->view('templates/header', $data);
+            $this->load->view('news/index', $data);
+            $this->load->view('templates/footer');
+        }
+
+        public function view($slug = NULL) {
+            $data['news_item'] = $this->news_model->get_news($slug);
+        
+            if (empty($data['news_item'])) {
+                show_404();
+            }
+
+            $data['title'] = $data['news_item']['title'];
+
+            $this->load->view('templates/header', $data);
+            $this->load->view('news/view', $data);
+            $this->load->view('templates/footer');
+        }
+    }
+?>
+```
+#### 顯示資料
+
+`路徑 application/controllers/news.php`
+
+code:
+
+```php
+<h2><?php echo $title ?></h2>
+
+<?php foreach ($news as $news_item): ?>
+
+        <h3><?php echo $news_item['title'] ?></h3>
+        <div class="main">
+                <?php echo $news_item['text'] ?>
+        </div>
+        <p><a href="news/<?php echo $news_item['slug'] ?>">View article</a></p>
+
+<?php endforeach ?>
+```
+
+#### 建立檢視資料頁面
+
+`路徑 application/views/news/view.php`
+
+code:
+
+```php
+<?php
+    echo '<h2>'.$news_item['title'].'</h2>';
+    echo $news_item['text'];
+```
+
+### 修改路由
+`路徑 application/config/routes.php`
+
+code:
+
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+$route['news/(:any)'] = 'news/view/$1';
+$route['news'] = 'news';
+$route['(:any)'] = 'pages/view/$1';
+$route['default_controller'] = 'pages/view';
+```
+
+開啟瀏覽器輸入URL:`http://localhost/codeigniter/index.php/about`
+
+### 修改連結資料庫
+`路徑 application/config/database.php`
+``` php
+    $db['default'] = array(
+	'dsn'	=> '',
+	'hostname' => 'localhost',
+	'username' => 'your user name',
+	'password' => 'your password',
+	'database' => 'CI_news',
+	'dbdriver' => 'mysqli',
+
+);
+```
+
+開啟瀏覽器輸入URL:`http://localhost/codeigniter/index.php/news`
