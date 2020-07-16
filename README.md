@@ -253,7 +253,11 @@ $route['default_controller'] = 'pages/view';
 開啟瀏覽器輸入URL:`http://localhost/codeigniter/index.php/about`
 
 ### 修改連結資料庫
+
 `路徑 application/config/database.php`
+
+code:
+
 ``` php
     $db['default'] = array(
 	'dsn'	=> '',
@@ -267,3 +271,155 @@ $route['default_controller'] = 'pages/view';
 ```
 
 開啟瀏覽器輸入URL:`http://localhost/codeigniter/index.php/news`
+
+
+## 新增資料到資料庫
+
+### 建立表單頁面
+
+`路徑 application/views/news/create.php`
+
+code:
+
+```php
+<h2><?php echo $title ?></h2>
+
+<?php echo validation_errors(); ?>
+
+<?php echo form_open('news/create') ?>
+
+    <label for="title">Title</label>
+    <input type="input" name="title" /><br />
+
+    <label for="text">Text</label>
+    <textarea name="text"></textarea><br />
+
+    <input type="submit" name="submit" value="Create news item" />
+
+</form>
+```
+
+### 建立、驗證表單
+`路徑 application/controllers/news.php`
+
+code:
+
+```php
+<?php
+    class news extends CI_Controller {
+        
+        public function __construct() {
+            parent::__construct();
+            $this->load->model('news_model');
+        }
+
+        public function index() {
+            $data['news'] = $this->news_model->get_news();
+            $data['title'] = 'News archive';
+
+            $this->load->view('templates/header', $data);
+            $this->load->view('news/index', $data);
+            $this->load->view('templates/footer');
+        }
+
+        public function view($slug = NULL) {
+            $data['news_item'] = $this->news_model->get_news($slug);
+        
+            if (empty($data['news_item'])) {
+                show_404();
+            }
+
+            $data['title'] = $data['news_item']['title'];
+
+            $this->load->view('templates/header', $data);
+            $this->load->view('news/view', $data);
+            $this->load->view('templates/footer');
+        }
+
+        // 驗證表單，建立表單
+        public function create() {
+            $this->load->helper('form');
+            $this->load->library('form_validation');
+
+            $data['title'] = 'Create a news item';
+
+            $this->form_validation->set_rules('title', 'Title', 'required');
+            $this->form_validation->set_rules('text', 'text', 'required');
+
+            if ($this->form_validation->run() === FALSE) {
+                $this->load->view('templates/header', $data);
+                $this->load->view('news/create');
+                $this->load->view('templates/footer');
+            } else {
+                $this->news_model->set_news();
+                $this->load->view('news/success');
+            }
+        }
+    }
+?>
+```
+
+### 將資料存進資料庫
+`路徑 application/models/News_model.php`
+
+code:
+
+```php
+<?php
+    class news_model extends CI_Model {
+        public function __construct() {
+            $this->load->database();
+        }
+
+        public function get_news($slug = FALSE) {
+            if ($slug === FALSE) {
+                $query = $this->db->get('news');
+                return $query->result_array();
+            }
+
+            $query = $this->db->get_where('news', array('slug' => $slug));
+            return $query->row_array();
+        }
+
+        public function set_news() {
+            $this->load->helper('url');
+
+            $slug = url_title($this->input->post('title'), 'dash', TRUE);
+
+            $data = array(
+                'title' => $this->input->post('title'),
+                'slug' => $slug,
+                'text' => $this->input->post('text')
+            );
+
+            return $this->db->insert('news', $data);
+        }
+    }
+?>
+```
+### 建立成功頁面
+`路徑 application/views/news/success.php`
+
+code:
+
+```php
+    <?php echo "SUCCESS OK!!!" ?>
+```
+
+### 修改路由
+`路徑 application/config/routes.php`
+
+code:
+
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+$route['news/create'] = 'news/create';
+$route['news/(:any)'] = 'news/view/$1';
+$route['news'] = 'news';
+$route['(:any)'] = 'pages/view/$1';
+$route['default_controller'] = 'pages/view';
+```
+
+開啟瀏覽器輸入URL:`http://localhost/codeigniter/index.php/about`
